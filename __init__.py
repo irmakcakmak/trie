@@ -34,10 +34,41 @@ class Trie(object):
     def put(self, key):
         self._root = self._put(self._root, key, 0)
 
+    def _collect(self, node, pre, queue):
+        if node is None:
+            return
+        queue.insert(0, pre)
+        for i in range(0, RADIX):
+            self._collect(node.next[i], pre + chr(i), queue)
+
+    def collect(self, node, prefix, pattern, queue):
+        pre_len = len(prefix)
+        pat_len = len(pattern)
+        if node is None:
+            return
+        if pre_len == pat_len:
+            queue.insert(0, prefix)
+            return
+        next = ord(pattern[pre_len])
+        for c in range(0, RADIX):
+            if (next == c):
+                self.collect(node.next[c], prefix + chr(c), pattern, queue)
+
+    def keys_that_match(self, key):
+        queue = list()
+        self.collect(self._root, "", key, queue)
+        return queue
+
+    def keys_with_prefix(self, prefix):
+        queue = []
+        self._collect(self._get(self._root, prefix, 0), prefix, queue)
+        return queue
+
 if __name__ == '__main__':
     trie = Trie()
     trie.put("hede")
-    result = trie.get("hede")
-    result = trie.get("he")
-    result = trie.get("bar")
+    trie.put("hebelek")
+    trie.put("foo")
+    trie.put("bar")
+    result = trie.keys_with_prefix("he")
     print result
