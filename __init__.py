@@ -41,24 +41,6 @@ class Trie(object):
         for i in range(0, RADIX):
             self._collect(node.next[i], pre + chr(i), queue)
 
-    def collect(self, node, prefix, pattern, queue):
-        pre_len = len(prefix)
-        pat_len = len(pattern)
-        if node is None:
-            return
-        if pre_len == pat_len:
-            queue.insert(0, prefix)
-            return
-        next = ord(pattern[pre_len])
-        for c in range(0, RADIX):
-            if (next == c):
-                self.collect(node.next[c], prefix + chr(c), pattern, queue)
-
-    def keys_that_match(self, key):
-        queue = list()
-        self.collect(self._root, "", key, queue)
-        return queue
-
     def keys_with_prefix(self, prefix):
         queue = []
         self._collect(self._get(self._root, prefix, 0), prefix, queue)
