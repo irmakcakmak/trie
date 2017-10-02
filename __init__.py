@@ -4,6 +4,7 @@ RADIX = 256
 class Node(object):
     def __init__(self):
         self.next = [None] * RADIX
+        self.size = 0
 
 
 class Trie(object):
@@ -29,6 +30,7 @@ class Trie(object):
             return node
         order = ord(key[index])
         node.next[order] = self._put(node.next[order], key, index+1)
+        node.size += 1
         return node
 
     def put(self, key):
@@ -37,7 +39,8 @@ class Trie(object):
     def _collect(self, node, pre, queue):
         if node is None:
             return
-        queue.insert(0, pre)
+        if node.size == 0:
+            queue.insert(0, pre)
         for i in range(0, RADIX):
             self._collect(node.next[i], pre + chr(i), queue)
 
