@@ -51,9 +51,8 @@ class Trie(object):
 
 if __name__ == '__main__':
     trie = Trie()
-    trie.put("hede")
-    trie.put("hebelek")
-    trie.put("foo")
-    trie.put("bar")
-    result = trie.keys_with_prefix("he")
+    with open("./test", "r") as f:
+        for line in f.readlines():
+            trie.put(line.strip().lower())
+    result = trie.keys_with_prefix("pa")
     print result
